@@ -2,6 +2,98 @@
 
 ---
 
+# Part 1: Expectation-Maximization (EM) Algorithm
+
+## Overview
+
+This part implements the Expectation-Maximization (EM) algorithm from scratch to fit a Gaussian Mixture Model (GMM) with two components to a dataset of children's and fathers' heights.
+
+The objective is to identify two height distributions from an unlabelled collection of observations. The algorithm estimates the mean, variance, and mixing weight of each component and updates these parameters iteratively until the model converges.
+
+## Dataset
+
+**Dataset:** [Parents' Heights vs. Children's Heights — Galton Data](https://www.kaggle.com/datasets/jacopoferretti/parents-heights-vs-children-heights-galton-data)
+
+The dataset contains family height measurements, including children's and fathers' heights.
+
+For this implementation:
+- Children's heights are extracted from the dataset.
+- One father's height per family is selected to avoid counting the same father multiple times.
+- Both sets of heights are combined into one unlabelled dataset.
+- The resulting dataset contains 1,139 observations: 934 children's heights and 205 fathers' heights.
+
+The dataset is not included in this repository. Download it from Kaggle before running the notebook.
+
+## Downloading and Setting Up the Dataset
+
+1. Open the [Kaggle dataset page](https://www.kaggle.com/datasets/jacopoferretti/parents-heights-vs-children-heights-galton-data).
+2. Sign in to Kaggle if prompted.
+3. Download the dataset as a ZIP file.
+4. Extract the ZIP file and locate the CSV containing the Galton family data.
+5. Ensure the CSV filename and file path match the path specified in the notebook. If necessary, rename the file or update the code.
+
+If you are using Google Colab, upload the CSV using the Files panel and make sure the notebook reads from the correct location.
+
+## Methodology
+
+The EM algorithm estimates the parameters of the two Gaussian components through the following steps:
+
+1. **Initialization:** Set initial estimates for the component means, variances, and mixing weights.
+2. **Expectation step (E-step):** Calculate the probability that each height belongs to each component.
+3. **Maximization step (M-step):** Update the means, variances, and mixing weights using the probabilities calculated in the E-step.
+4. **Convergence check:** Calculate the log-likelihood and repeat the E-step and M-step until the change in log-likelihood is smaller than the chosen tolerance or the maximum number of iterations is reached.
+
+The implementation uses a convergence tolerance of `1e-6` and a maximum of `1,000` iterations.
+
+## Results
+
+The following table records the initial parameter estimates and the results after the first two EM iterations.
+
+| Iteration | Mean 1 | Mean 2 | Variance 1 | Variance 2 | Weight 1 | Weight 2 | Log-Likelihood |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0 (Initial) | 64.2299 | 70.1819 | 12.7241 | 12.7241 | 0.5000 | 0.5000 | -3136.4676 |
+| 1 | 65.1207 | 69.2760 | 8.7032 | 8.1149 | 0.4976 | 0.5024 | -3056.6103 |
+| 2 | 65.0591 | 69.3312 | 8.5547 | 7.7733 | 0.4969 | 0.5031 | -3055.5576 |
+
+These results show how the component parameters change during the first iterations. The log-likelihood increases, indicating that the model fit improves as the algorithm updates its estimates.
+
+### Example Prediction
+
+A height of 68 inches was used to demonstrate the component-membership probabilities calculated by the model.
+
+| Component | Posterior Probability |
+|---|---:|
+| Component 1 (shorter-height distribution) | 19.88% |
+| Component 2 (taller-height distribution) | 80.12% |
+
+For this observation, the model assigns a higher probability to the taller-height component.
+
+**Note:** The two components represent statistical height distributions. They do not automatically identify whether a person is a child or a parent.
+
+## Implementation
+
+The notebook implements the following functionality:
+- Gaussian probability density calculations.
+- E-step responsibility calculations.
+- M-step parameter updates.
+- Log-likelihood calculation.
+- Iterative convergence checking.
+- Posterior probability calculations for a new height.
+
+The algorithm is implemented using Python, NumPy, and Pandas.
+
+## How to Run
+
+1. Download and extract the dataset from Kaggle.
+2. Place the CSV where the notebook expects it, or update the file path.
+3. Open the Part 1 Jupyter notebook.
+4. Run all cells in order.
+5. Review the parameter-tracking table, convergence output, and example posterior probabilities.
+
+## Conclusion
+
+The implementation demonstrates how the EM algorithm can estimate a two-component Gaussian mixture from unlabelled height data. It shows the iterative process of updating model parameters, monitoring log-likelihood, and estimating the probability that an observation belongs to each component.
+
 ## Part 2: Bayesian Probability
 ### Overview
 
