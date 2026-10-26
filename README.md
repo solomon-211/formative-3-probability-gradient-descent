@@ -68,7 +68,8 @@ Bayes' theorem was used to estimate the probability of negative sentiment given 
 `gradient_descent.ipynb` converts the manual calculations from Part 3 into clean,
 transparent Python code. Every intermediate value (ŷ, e, J, gradients, updated
 parameters) is printed at each iteration so the computation mirrors the hand-worked
-steps exactly.
+steps exactly. The code is modular and follows the DRY principle — each function does
+exactly one job and is reused across every iteration.
 
 ### Problem Setup
 
@@ -83,23 +84,50 @@ Linear model: **ŷ = Xm + b** (matrix form)
 | Learning rate α | 0.01 |
 | Number of updates | 3 |
 
-### Key Design Decisions
+### Gradient Derivation (Chain Rule)
 
-- **Matrix operations throughout** — NumPy arrays are used for all calculations; no scalar shortcuts.
-- **Modular building blocks** — each function does exactly one job and maps directly to one step of the hand calculation:
+Cost function (MSE):
+
+```
+J(m, b) = (1/n) · eᵀe     where e = ŷ − y = Xm + b − y
+```
+
+Applying the chain rule J → e → ŷ → (m, b):
+
+```
+∂J/∂ŷ = (2/n) · e
+∂ŷ/∂m = Xᵀ
+∂ŷ/∂b = I
+
+∴ ∂J/∂m = (2/n) · Xᵀe
+∴ ∂J/∂b = (2/n) · e
+```
+
+Update rules:
+
+```
+m ← m − α · ∂J/∂m
+b ← b − α · ∂J/∂b
+```
+
+### Code Structure (Modular / DRY)
+
+Each function maps directly to one step of the derivation above and is reused in every iteration:
 
 | Function | Responsibility |
 |----------|---------------|
 | `predict(X, m, b)` | Compute ŷ = Xm + b |
 | `compute_error(y_hat, y)` | Compute e = ŷ − y |
 | `compute_cost(e)` | Compute J = (1/n) eᵀe |
-| `compute_gradients(X, e)` | Compute ∂J/∂m and ∂J/∂b |
-| `update_params(m, b, dJ_dm, dJ_db, alpha)` | Apply gradient descent step |
-| `compute_derivative(equation, point)` | Numerical gradient via SciPy |
-
-- **SciPy verification** — `scipy.optimize.approx_fprime` numerically differentiates the cost function and cross-checks the hand-derived gradients at every iteration. An assertion confirms they match to within 1e-4.
+| `compute_gradients(X, e)` | Compute ∂J/∂m = (2/n)Xᵀe and ∂J/∂b = (2/n)e |
+| `update_params(m, b, dJ_dm, dJ_db, alpha)` | Apply m ← m − α·∂J/∂m and b ← b − α·∂J/∂b |
+| `compute_derivative(equation, point)` | Numerical gradient via SciPy (used to verify hand-derived gradients) |
 
 ### SciPy Integration
+
+`compute_derivative` accepts any equation as a function and a point, and returns the
+numerical gradient using `scipy.optimize.approx_fprime`. It is used to cross-check the
+hand-derived gradients at every iteration — an assertion confirms they match to within 1e-4.
 
 ```python
 from scipy.optimize import approx_fprime
@@ -109,7 +137,8 @@ def compute_derivative(equation, point):
     return approx_fprime(point, equation, epsilon=1e-7)
 ```
 
-The cost function is wrapped so SciPy can differentiate it with respect to a single flat parameter vector `[m1, m2, b1, b2]`.
+The cost function is wrapped so SciPy can differentiate it with respect to a single flat
+parameter vector `[m1, m2, b1, b2]`, making the verification straightforward.
 
 ### Printed Output (3 iterations)
 
@@ -159,16 +188,26 @@ final cost J = 2.1645
 
 Two Matplotlib figures are produced and saved:
 
-**1. Parameter change over iterations** (`m_and_b_plot.png`) — shows how m₁, m₂, b₁, and b₂ evolve across the three update steps.
+**1. Parameter change over iterations** (`m_and_b_plot.png`) — shows how m₁, m₂, b₁,
+and b₂ evolve across the three update steps.
 
-**2. Error (cost) over iterations** (`error_plot.png`) — shows the MSE cost J decreasing from 61 → 6.50 → 2.50 → 2.16, demonstrating convergence.
+**2. Error (cost) over iterations** (`error_plot.png`) — shows the MSE cost J decreasing
+from 61 → 6.50 → 2.50 → 2.16, demonstrating convergence.
 
-### Observed Trend
+### Observed Trend — Are m and b Moving in the Right Direction?
 
-- m₂ falls from 2 → ~1.10; m₁ moves from −1 → ~−1.37.
-- b changes only slightly because its gradient (e) is much smaller than the gradient for m (Xᵀe).
-- The first update overshoots (predictions go from too high to too low), so the error signs flip in Update 2. Later updates are smaller.
-- The cost consistently decreases, confirming the parameters are moving in the correct direction.
+Yes. The cost drops from **61.0 → 6.50 → 2.50 → 2.16** across the three updates,
+confirming that the parameters are consistently moving in a direction that reduces the
+error.
+
+- **m₂** falls from 2 → ~1.10 and **m₁** moves from −1 → ~−1.37. The first update is
+  the largest because the initial error (J = 61) was large, producing large gradients.
+- **b** changes only slightly because its gradient (e) is much smaller in magnitude than
+  the gradient for m (Xᵀe), so the step size is small.
+- The first update overshoots slightly — predictions jump from too high to too low —
+  causing the error signs to flip in Update 2. This is expected behaviour at a learning
+  rate of 0.01 with a large initial error. Subsequent updates are smaller and the cost
+  continues to decrease, showing the algorithm is converging.
 
 ---
 
