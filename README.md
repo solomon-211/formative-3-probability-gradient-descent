@@ -2,15 +2,15 @@
 
 ---
 
-# Part 1: Expectation-Maximization (EM) Algorithm
+## Part 1: Expectation-Maximization (EM) Algorithm
 
-## Overview
+### Overview
 
 This part implements the Expectation-Maximization (EM) algorithm from scratch to fit a Gaussian Mixture Model (GMM) with two components to a dataset of children's and fathers' heights.
 
 The objective is to identify two height distributions from an unlabelled collection of observations. The algorithm estimates the mean, variance, and mixing weight of each component and updates these parameters iteratively until the model converges.
 
-## Dataset
+### Dataset
 
 **Dataset:** [Parents' Heights vs. Children's Heights — Galton Data](https://www.kaggle.com/datasets/jacopoferretti/parents-heights-vs-children-heights-galton-data)
 
@@ -24,7 +24,7 @@ For this implementation:
 
 The dataset is not included in this repository. Download it from Kaggle before running the notebook.
 
-## Downloading and Setting Up the Dataset
+### Downloading and Setting Up the Dataset
 
 1. Open the [Kaggle dataset page](https://www.kaggle.com/datasets/jacopoferretti/parents-heights-vs-children-heights-galton-data).
 2. Sign in to Kaggle if prompted.
@@ -34,7 +34,7 @@ The dataset is not included in this repository. Download it from Kaggle before r
 
 If you are using Google Colab, upload the CSV using the Files panel and make sure the notebook reads from the correct location.
 
-## Methodology
+### Methodology
 
 The EM algorithm estimates the parameters of the two Gaussian components through the following steps:
 
@@ -45,7 +45,7 @@ The EM algorithm estimates the parameters of the two Gaussian components through
 
 The implementation uses a convergence tolerance of `1e-6` and a maximum of `1,000` iterations.
 
-## Results
+### Results
 
 The following table records the initial parameter estimates and the results after the first two EM iterations.
 
@@ -70,7 +70,7 @@ For this observation, the model assigns a higher probability to the taller-heigh
 
 **Note:** The two components represent statistical height distributions. They do not automatically identify whether a person is a child or a parent.
 
-## Implementation
+### Implementation
 
 The notebook implements the following functionality:
 - Gaussian probability density calculations.
@@ -82,7 +82,7 @@ The notebook implements the following functionality:
 
 The algorithm is implemented using Python, NumPy, and Pandas.
 
-## How to Run
+### How to Run
 
 1. Download and extract the dataset from Kaggle.
 2. Place the CSV where the notebook expects it, or update the file path.
@@ -90,7 +90,7 @@ The algorithm is implemented using Python, NumPy, and Pandas.
 4. Run all cells in order.
 5. Review the parameter-tracking table, convergence output, and example posterior probabilities.
 
-## Conclusion
+### Conclusion
 
 The implementation demonstrates how the EM algorithm can estimate a two-component Gaussian mixture from unlabelled height data. It shows the iterative process of updating model parameters, monitoring log-likelihood, and estimating the probability that an observation belongs to each component.
 
