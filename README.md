@@ -2,6 +2,65 @@
 
 ---
 
+## Part 2: Bayesian Probability
+### Overview
+
+Part 2 applies Bayes' theorem to movie reviews from the IMDb Dataset of 50K Movie Reviews. The objective is to investigate the relationship between selected keywords and negative sentiment by calculating prior, likelihood, marginal, and posterior probabilities.
+
+The analysis was completed in Python using the built-in `csv` module. Each review was checked for the presence of four selected keywords: `horrible`, `disappointing`, `pathetic`, and `boring`. Each keyword was counted at most once per review, regardless of how many times it appeared.
+
+### Dataset
+- **Dataset:** IMDb Dataset of 50K Movie Reviews
+- **Source:** [Kaggle: IMDb Dataset of 50K Movie Reviews](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
+- **File required:** `IMDB Dataset.csv`
+- **Total reviews:** 50,000
+- **Positive reviews:** 25,000
+- **Negative reviews:** 25,000
+- **Columns:** `review` and `sentiment`
+
+The dataset is not included in this repository. Download it separately before running the analysis.
+
+### Download and Setup Instructions
+1. Open the [IMDb Dataset of 50K Movie Reviews](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews).
+2. Sign in to your Kaggle account, creating a free account if necessary.
+3. Click **Download** to download the dataset archive.
+4. Extract the downloaded ZIP file. It contains `IMDB Dataset.csv`.
+5. Make the CSV file available in the environment where you run the analysis:
+   - **Google Colab:** Open the notebook, click the Files icon in the left sidebar, and upload `IMDB Dataset.csv`.
+6. Run the notebook cells in order.
+
+The CSV filename must match `IMDB Dataset.csv` because the code opens that exact filename.
+
+### Results
+
+The following table summarizes the probabilities calculated from the dataset.
+
+| Keyword | Prior: P(Negative) | Likelihood: P(Keyword\|Negative) | Marginal: P(Keyword) | Posterior: P(Negative\|Keyword) |
+|---|---:|---:|---:|---:|
+| horrible | 0.5000 (50%)| 0.07116 (7.15%)| 0.04210 (4.21%)| 0.8451 (84.51%) |
+| disappointing | 0.5000 (50%)| 0.02556 (2.56%)| 0.01646 (1.65%)| 0.7764 (77.64%) |
+| pathetic | 0.5000 (50%)| 0.04424 (4.42%)| 0.03128 (3.13%)| 0.7072 (70.72%) |
+| boring | 0.5000 (50%)| 0.09992 (9.99%)| 0.06232 (6.23%)| 0.8017 (80.17%) |
+
+### Interpretation
+
+- **Horrible:** Reviews containing this keyword had an estimated 84.51% probability of being labelled negative, the highest posterior probability among the four keywords.
+- **Disappointing:** Reviews containing this keyword had a 77.64% probability of being labelled negative.
+- **Pathetic:** Reviews containing this keyword had a 70.72% probability of being labelled negative, the lowest posterior probability among the four keywords.
+- **Boring:** Reviews containing this keyword had an 80.17% probability of being labelled negative.
+
+### Limitations
+
+This analysis uses keyword presence as a simple indicator of sentiment. It does not understand the context in which a word is used. For example, a positive review might say that a movie "wasn't horrible," even though it contains the keyword `horrible`.
+
+The method also does not account for negation, sarcasm, or the overall meaning of a review. Therefore, these probabilities describe the relationship between keyword presence and the dataset's sentiment labels; they do not guarantee that an individual review has been interpreted correctly.
+
+### Conclusion
+
+Bayes' theorem was used to estimate the probability of negative sentiment given the presence of four selected keywords. Among them, `horrible` had the highest posterior probability at 84.51%, while `pathetic` had the lowest at 70.72%.
+
+---
+
 ## Part 4 — Gradient Descent in Code
 
 > **This is the part I was responsible for.**
