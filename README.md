@@ -63,8 +63,6 @@ Bayes' theorem was used to estimate the probability of negative sentiment given 
 
 ## Part 4 — Gradient Descent in Code
 
-> **This is the part I was responsible for.**
-
 ### Overview
 
 `gradient_descent.ipynb` converts the manual calculations from Part 3 into clean,
@@ -72,12 +70,23 @@ transparent Python code. Every intermediate value (ŷ, e, J, gradients, updated
 parameters) is printed at each iteration so the computation mirrors the hand-worked
 steps exactly.
 
+### Problem Setup
+
+Linear model: **ŷ = Xm + b** (matrix form)
+
+| Parameter | Initial value |
+|-----------|--------------|
+| m | [-1, 2]ᵀ |
+| b | [1, 1]ᵀ |
+| X | [[1, 3], [4, 10]] |
+| y | [5, 6]ᵀ |
+| Learning rate α | 0.01 |
+| Number of updates | 3 |
+
 ### Key Design Decisions
 
-- **Matrix operations throughout** — NumPy arrays are used for all calculations; no
-  scalar shortcuts.
-- **Modular building blocks** — each function does exactly one job and maps directly to
-  one step of the hand calculation:
+- **Matrix operations throughout** — NumPy arrays are used for all calculations; no scalar shortcuts.
+- **Modular building blocks** — each function does exactly one job and maps directly to one step of the hand calculation:
 
 | Function | Responsibility |
 |----------|---------------|
@@ -88,9 +97,7 @@ steps exactly.
 | `update_params(m, b, dJ_dm, dJ_db, alpha)` | Apply gradient descent step |
 | `compute_derivative(equation, point)` | Numerical gradient via SciPy |
 
-- **SciPy verification** — `scipy.optimize.approx_fprime` is used to numerically
-  differentiate the cost function and cross-check the hand-derived gradients at every
-  iteration. An assertion confirms they match to within 1e-4.
+- **SciPy verification** — `scipy.optimize.approx_fprime` numerically differentiates the cost function and cross-checks the hand-derived gradients at every iteration. An assertion confirms they match to within 1e-4.
 
 ### SciPy Integration
 
@@ -102,8 +109,7 @@ def compute_derivative(equation, point):
     return approx_fprime(point, equation, epsilon=1e-7)
 ```
 
-The cost function is wrapped so that SciPy can differentiate it with respect to a single
-flat parameter vector `[m1, m2, b1, b2]`, making the verification straightforward.
+The cost function is wrapped so SciPy can differentiate it with respect to a single flat parameter vector `[m1, m2, b1, b2]`.
 
 ### Printed Output (3 iterations)
 
@@ -153,30 +159,24 @@ final cost J = 2.1645
 
 Two Matplotlib figures are produced and saved:
 
-**1. Parameter change over iterations** (`m_and_b_plot.png`)  
-Shows how m₁, m₂, b₁, and b₂ evolve across the three update steps.
+**1. Parameter change over iterations** (`m_and_b_plot.png`) — shows how m₁, m₂, b₁, and b₂ evolve across the three update steps.
 
-**2. Error (cost) over iterations** (`error_plot.png`)  
-Shows the MSE cost J decreasing from 61 → 6.50 → 2.50 → 2.16, demonstrating
-convergence.
+**2. Error (cost) over iterations** (`error_plot.png`) — shows the MSE cost J decreasing from 61 → 6.50 → 2.50 → 2.16, demonstrating convergence.
 
 ### Observed Trend
 
 - m₂ falls from 2 → ~1.10; m₁ moves from −1 → ~−1.37.
-- b changes only slightly because its gradient (e) is much smaller than the gradient
-  for m (Xᵀe).
-- The first update overshoots (predictions go from too high to too low), so the error
-  signs flip in Update 2. Later updates are smaller.
-- The cost consistently decreases, confirming the parameters are moving in the correct
-  direction.
+- b changes only slightly because its gradient (e) is much smaller than the gradient for m (Xᵀe).
+- The first update overshoots (predictions go from too high to too low), so the error signs flip in Update 2. Later updates are smaller.
+- The cost consistently decreases, confirming the parameters are moving in the correct direction.
 
 ---
 
 ## How to Run
 
-1. Clone the repository and open `gradient_descent.ipynb` in Jupyter or Google Colab.
+1. Open `gradient_descent.ipynb` in Jupyter or Google Colab.
 2. Run all cells in order — each cell corresponds to one labelled section.
-3. The notebook will print step-by-step results and display/save both plots automatically.
+3. The notebook prints step-by-step results and displays/saves both plots automatically.
 
 ---
 
